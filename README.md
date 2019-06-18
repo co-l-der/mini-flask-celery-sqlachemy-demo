@@ -1,5 +1,4 @@
-
-####简要描述：
+#### 简要描述：
 
 此项目在mini-flask-restful-demo基础上修改,添加了celery和sqlachemy模板,包括
 
@@ -12,13 +11,13 @@
 4. 两个关于使用celery的restful接口
 
 
-####项目启动方式(注意启动celery)
+#### 项目启动方式(注意启动celery):
 
 1. python run.py
 2. celery -A app.tasks.celery_task
 
 
-####接口示例
+#### 接口示例:
 
 1. 调用celery task接口
 - ` http://localhost:5000/cat/detail`
