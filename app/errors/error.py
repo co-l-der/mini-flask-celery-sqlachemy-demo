@@ -27,3 +27,14 @@ class InvalidParameter(BaseRestfulException):
         if message:
             self.message = message
         super().__init__(self.message, self._code)
+
+
+class CeleryTaskException(BaseRestfulException):
+
+    _code = 1002
+    message = "task encountered a problem"
+
+    def __init__(self, message=None):
+        if message:
+            self.message = message
+        super().__init__(self.message, self._code)

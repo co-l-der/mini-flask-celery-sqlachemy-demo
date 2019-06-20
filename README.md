@@ -14,7 +14,7 @@
 #### 项目启动方式(注意启动celery):
 
 1. python run.py
-2. celery -A app.tasks.celery_task
+2. celery worker -A app.tasks.celery_task
 
 
 #### 接口示例:
@@ -49,19 +49,10 @@
 ``` 
 
 {
-
     "code": 0,
-
     "data": {
-
-        "gender": "male",
-
-        "id": 1,
-
-        "name": "tom"
-
+        "task_id": "d7f4d708-ff81-4ff8-b349-37771ff8eead"
     }
-
 }
 
 ```
@@ -81,7 +72,7 @@
 
  {
 
-    "task_id": "",
+    "task_id": "bfc3d16f-b31c-422c-811a-63ce76ed30d9",
 
 }
 

@@ -3,8 +3,10 @@
 from flask import jsonify
 from flask_restplus import Resource
 
-from app.errors.error import InvalidParameter
+from app.errors.error import InvalidParameter, CeleryTaskException
+from app.model.schema import CeleryTaskModel
 from app.restful import rest as api
+from app.tasks.celery_task import execute_time_consuming_operation, get_task_status
 from app.validator import request_parser
 
 __author__ = "han"
@@ -28,6 +30,38 @@ class DetailResource(Resource):
         except InvalidParameter as e:
             raise InvalidParameter(message=e.message)
 
-        ret_dict = dict(id=args.get("id"), name=args.get("name"), gender=args.get("gender", ""))
+        try:
+            result = execute_time_consuming_operation.delay(**dict(args))
+        except Exception:
+            raise CeleryTaskException()
+
+        celery_task_model = CeleryTaskModel()
+        celery_task_model.save_celery_task(args, result)
+        ret_dict = dict(task_id=result.id)
+
+        return jsonify({"code": 0, "data": ret_dict})
+
+
+@api.route("/status")
+class TaskStatusResource(Resource):
+    parser = request_parser.BaseRequestParser()
+    parser.add_argument("task_id", type=str, required=True, location="json")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def post(self):
+
+        try:
+            args = self.parser.parse_args()
+        except InvalidParameter as e:
+            raise InvalidParameter(message=e.message)
+        # 获取任务状态
+        try:
+            status = get_task_status(args.get("task_id"))
+        except Exception:
+            raise CeleryTaskException()
+
+        ret_dict = dict(status=status)
 
         return jsonify({"code": 0, "data": ret_dict})
