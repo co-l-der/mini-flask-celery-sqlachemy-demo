@@ -88,4 +88,5 @@ class CeleryTaskModel(Base):
             self.set_attrs(attrs_dict=args)
             self.create_time = int(datetime.now().timestamp())
             self.update_time = int(datetime.now().timestamp())
+            db.session.add(self)
 
